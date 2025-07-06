@@ -1,6 +1,6 @@
-module liquibaseMigrationHelper
+module github.com/Kamillendampf/LiquibaseXgolang
 
-go 1.23.10
+go 1.20
 
 require (
 	github.com/docker/go-connections v0.5.0

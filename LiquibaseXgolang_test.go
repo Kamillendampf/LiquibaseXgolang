@@ -1,4 +1,4 @@
-package liquibaseMigrationHelper
+package LiquibaseXgolang
 
 import (
 	"context"
@@ -171,6 +171,20 @@ func TestLiquibase_Update(t *testing.T) {
 			t.Errorf("Expected lock to be cleared, but it is still active")
 		} else {
 			t.Logf("ReleaseLocks successfully cleared the lock ")
+		}
+	})
+
+	t.Run("Apply update", func(t *testing.T) {
+		lb := New(cfg)
+		if err := lb.Update(); err != nil {
+			t.Fatalf("Update failed before history test: %v", err)
+		}
+	})
+
+	t.Run("Read history", func(t *testing.T) {
+		lb := New(cfg)
+		if err := lb.History(); err != nil {
+			t.Errorf("Expected History() to succeed, got error: %v", err)
 		}
 	})
 

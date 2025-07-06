@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/liquibaseMigrationHelper.iml" filepath="$PROJECT_DIR$/.idea/liquibaseMigrationHelper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/LiquibaseXgolang.iml" filepath="$PROJECT_DIR$/.idea/LiquibaseXgolang.iml" />
     </modules>
   </component>
 </project>

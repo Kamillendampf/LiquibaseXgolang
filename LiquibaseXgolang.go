@@ -1,4 +1,4 @@
-package liquibaseMigrationHelper
+package LiquibaseXgolang
 
 import (
 	"fmt"
@@ -117,6 +117,17 @@ func (l *Liquibase) ReleaseLocks() error {
 		"--username=" + l.cfg.Username,
 		"--password=" + l.cfg.Password,
 		"releaseLocks",
+	}
+	return runCLI(l.cfg, args)
+}
+
+func (l *Liquibase) History() error {
+	args := []string{
+		"--changeLogFile=" + l.cfg.ChangelogFile,
+		"--url=" + l.cfg.URL,
+		"--username=" + l.cfg.Username,
+		"--password=" + l.cfg.Password,
+		"history",
 	}
 	return runCLI(l.cfg, args)
 }

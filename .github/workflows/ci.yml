@@ -1,0 +1,60 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: Go
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.23'
+    - name: Download Liquibase
+      run: |
+        wget https://package.liquibase.com/downloads/cli/liquibase/releases/download/v4.32.0/liquibase-4.32.0.tar.gz
+        mkdir liquibase
+        tar -xvzf liquibase-4.32.0.tar.gz   -C liquibase > /dev/null
+
+    - name: Add Liquibase to PATH
+      run: echo "$GITHUB_WORKSPACE/liquibase" >> $GITHUB_PATH
+      
+    - name: Verify Liquibase
+      run: liquibase --version
+
+    - name: Build
+      run: |
+        go mod tidy
+        go build -v ./...
+
+    - name: Test
+      run: go test -v -coverprofile=coverage.out ./...
+    
+    - name: Show coverage summary
+      run: |
+          go tool cover -func=coverage.out
+    - name:  Fail if coverage < 80%
+      run: |
+          THRESHOLD=80
+          TOTAL=$(go tool cover -func=coverage.out | grep total | awk '{print substr($3, 1, length($3)-1)}')
+          TOTAL_INT=${TOTAL%.*}
+          echo "Total coverage: $TOTAL%"
+          if [ "$TOTAL_INT" -lt "$THRESHOLD" ]; then
+            echo " Coverage below ${THRESHOLD}%!" && exit 1
+          fi
+
+    - name:  Optional - Upload coverage report artifact
+      uses: actions/upload-artifact@v4
+      with:
+          name: coverage-report
+          path: coverage.out
